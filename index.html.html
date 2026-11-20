@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sonsuza Dek...</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@0,700;1,700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fff0f3, #ffb3c6);
+            min-height: 100vh;
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        .romantic-font { font-family: 'Dancing Script', cursive; }
+        .elegant-font { font-family: 'Playfair Display', serif; }
+
+        /* Screen Transitions */
+        #login-screen {
+            transition: opacity 0.8s ease-in-out, visibility 0.8s;
+        }
+        
+        #main-content {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1.5s ease-in-out, visibility 1.5s;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .show-content {
+            opacity: 1 !important;
+            visibility: visible !important;
+            position: relative !important;
+        }
+
+        .hide-login {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .hearts-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            bottom: -10%;
+            transform: scale(0.5);
+            animation: floatUp linear infinite;
+            opacity: 0.7;
+            color: #ff8fab;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(0.5) rotate(0deg); opacity: 0.8; }
+            100% { transform: translateY(-120vh) scale(1.5) rotate(360deg); opacity: 0; }
+        }
+
+        .photo-frame {
+            background-color: white;
+            padding: 12px 12px 40px 12px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 8px;
+            position: relative;
+            /* width adjusted to allow centered wrap */
+            width: 100%;
+            max-width: 350px;
+        }
+        
+        /* Alternating tilts for polaroid effect */
+        .photo-frame:nth-child(even) { transform: rotate(-2deg); }
+        .photo-frame:nth-child(odd) { transform: rotate(2deg); }
+        .photo-frame:nth-child(3n) { transform: rotate(1deg); }
+        .photo-frame:nth-child(7) { transform: rotate(0deg) scale(1.02); } /* Special center frame */
+
+        .photo-frame:hover {
+            transform: scale(1.08) rotate(0deg) !important;
+            box-shadow: 0 20px 40px rgba(255, 143, 171, 0.5);
+            z-index: 10;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+        
+        .glow-text {
+            text-shadow: 0 0 20px rgba(255, 143, 171, 0.6), 0 0 40px rgba(255, 143, 171, 0.4);
+        }
+    </style>
+</head>
+<body class="text-gray-800 selection:bg-pink-300 selection:text-white">
+
+    <!-- Password Login Screen -->
+    <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-pink-100 bg-opacity-80 backdrop-blur-md">
+        <div class="glass-panel p-8 md:p-12 rounded-[2rem] shadow-2xl max-w-sm w-full text-center relative overflow-hidden">
+            <!-- Decorative Background Hearts -->
+            <i class="fas fa-heart text-pink-200 text-9xl absolute -top-10 -right-10 opacity-50 transform rotate-12"></i>
+            <i class="fas fa-heart text-pink-200 text-7xl absolute -bottom-6 -left-6 opacity-50 transform -rotate-12"></i>
+            
+            <div class="relative z-10">
+                <div class="text-pink-400 text-4xl mb-6 animate-pulse">
+                    <i class="fa-solid fa-heart-lock"></i>
+                </div>
+                
+                <h1 class="romantic-font text-3xl md:text-4xl text-pink-500 mb-6 font-bold">Özel tarihimizi gir sevgilim 🤍</h1>
+                
+                <form id="login-form" class="space-y-6">
+                    <div>
+                        <input type="password" id="password-input" 
+                            class="w-full text-center text-2xl tracking-[0.5em] px-4 py-3 border-2 border-pink-200 rounded-2xl focus:outline-none focus:border-pink-400 focus:ring-4 focus:ring-pink-100 bg-white/80 transition-all text-pink-600 font-bold placeholder-pink-200"
+                            placeholder="******" maxlength="6" autocomplete="off">
+                    </div>
+                    
+                    <button type="submit" 
+                        class="w-full bg-pink-400 hover:bg-pink-500 text-white font-medium py-3 px-6 rounded-2xl shadow-lg hover:shadow-pink-400/50 transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2">
+                        <span>Kilidi Aç</span>
+                        <i class="fas fa-key text-sm"></i>
+                    </button>
+                    
+                    <!-- Error Message Container -->
+                    <div id="error-message" class="hidden mt-4 p-3 bg-red-50 border border-red-200 text-red-400 rounded-xl text-sm font-medium animate-pulse">
+                        <i class="fas fa-times-circle mr-1"></i>
+                        Yanlış tarih sevgilim, tekrar dene 🥺
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content (Hidden until unlocked) -->
+    <div id="main-content" class="relative min-h-screen">
+        
+        <!-- Floating Hearts Background Container -->
+        <div class="hearts-bg" id="hearts-container"></div>
+
+        <div class="relative z-10 max-w-6xl mx-auto px-4 py-16 md:py-24">
+            
+            <!-- Header Section with Big Name and Message -->
+            <header class="text-center mb-20 space-y-8 glass-panel p-8 md:p-14 rounded-[3rem] shadow-xl w-full mx-auto relative overflow-hidden">
+                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    <i class="fas fa-heart text-pink-300 text-5xl opacity-40"></i>
+                </div>
+
+                <i class="fas fa-heart text-pink-500 text-3xl animate-bounce mb-2"></i>
+                
+                <h1 class="elegant-font text-6xl md:text-8xl lg:text-9xl text-pink-600 font-bold tracking-widest glow-text uppercase">
+                    ENFALİM
+                </h1>
+                
+                <div class="w-24 h-1 bg-pink-300 mx-auto rounded-full my-8"></div>
+                
+                <p class="text-lg md:text-xl text-gray-800 max-w-4xl mx-auto leading-relaxed font-medium px-4 md:px-8">
+                    Seninle geçen bu yıl bir saniye gibi geçti benim herşeyim oldun seninle geçirdiğimiz her an unutulmaz ve çok güzeldi seninle bir yıl değil yıllar istiyorum bir ömür seninle olsun istiyorum benim en güzel ve en büyük şansımsın en güzel duamsın en özelim en kıymetlimsin en güzel hediyemsin seni çok ama çok seviyorum nice mutlu yıllarımıza iyikim
+                </p>
+            </header>
+
+            <!-- Photo Gallery Section -->
+            <section class="mt-16">
+                <!-- Flexbox used to center the 7th image perfectly at the bottom -->
+                <div class="flex flex-wrap justify-center gap-8 md:gap-12 px-2">
+                    
+                    <!-- Photo 1 -->
+                    <div class="photo-frame group w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-2rem)]">
+                        <div class="aspect-[4/5] bg-pink-50 overflow-hidden rounded shadow-inner">
+                            <img src="5879908437406192159.jpg" alt="Anı 1" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        </div>
+                        <p class="romantic-font text-2xl text-center mt-5 text-pink-500">Biz...</p>
+                    </div>
+
+                    <!-- Photo 2 -->
+                    <div class="photo-frame group w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-2rem)]">
+                        <div class="aspect-[4/5] bg-pink-50 overflow-hidden rounded shadow-inner">
+                            <img src="gecelerimiz.jpg" alt="Anı 2" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        </div>
+                        <p class="romantic-font text-2xl text-center mt-5 text-pink-500">Gece el ele gezmelerimiz...</p>
+                    </div>
+
+                    <!-- Photo 3 -->
+                    <div class="photo-frame group w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-2rem)]">
+                        <div class="aspect-[4/5] bg-pink-50 overflow-hidden rounded shadow-inner">
+                            <img src="huzurum.jpg" alt="Anı 3" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        </div>
+                        <p class="romantic-font text-2xl text-center mt-5 text-pink-500">Her Şeyim...</p>
+                    </div>
+
+                    <!-- Photo 4 -->
+                    <div class="photo-frame group w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-2rem)]">
+                        <div class="aspect-[4/5] bg-pink-50 overflow-hidden rounded shadow-inner">
+                            <img src="ilkanımız.jpg" alt="Anı 4" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        </div>
+                        <p class="romantic-font text-2xl text-center mt-5 text-pink-500">İlk ve en unutulmaz anımız...</p>
+                    </div>
+
+                    <!-- Photo 5 -->
+                    <div class="photo-frame group w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-2rem)]">
+                        <div class="aspect-[4/5] bg-pink-50 overflow-hidden rounded shadow-inner">
+                            <img src="ilkyağmur.jpg" alt="Anı 5" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        </div>
+                        <p class="romantic-font text-2xl text-center mt-5 text-pink-500">İlk yağmur altında ıslanmamız...</p>
+                    </div>
+
+                    <!-- Photo 6 -->
+                    <div class="photo-frame group w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-2rem)]">
+                        <div class="aspect-[4/5] bg-pink-50 overflow-hidden rounded shadow-inner">
+                            <img src="sımsıkı.jpg" alt="Anı 6" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        </div>
+                        <p class="romantic-font text-2xl text-center mt-5 text-pink-500">Sonsuza dek sımsıkı sarılışımız...</p>
+                    </div>
+                    
+                    <!-- Photo 7 (Will automatically center due to flex-center) -->
+                    <div class="photo-frame group w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-2rem)]">
+                        <div class="aspect-[4/5] bg-pink-50 overflow-hidden rounded shadow-inner border-4 border-pink-100">
+                            <img src="sonbaharımız.jpg" alt="Anı 7" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        </div>
+                        <p class="romantic-font text-3xl text-center mt-5 text-pink-600 font-bold">Biz...</p>
+                    </div>
+                    
+                </div>
+            </section>
+
+            <!-- Music Button Section -->
+            <section class="mt-28 text-center flex flex-col items-center">
+                <a href="https://www.youtube.com/watch?v=aDju79MtUR8" target="_blank" rel="noopener noreferrer" class="group relative inline-flex items-center justify-center gap-4 glass-panel px-12 py-6 rounded-full shadow-xl hover:shadow-pink-300/60 transform hover:scale-105 transition-all duration-300 border-2 border-pink-200 hover:border-pink-300 bg-white/40">
+                    <i class="fas fa-music text-pink-400 text-2xl animate-pulse group-hover:text-pink-500"></i>
+                    <span class="romantic-font text-4xl text-pink-500 group-hover:text-pink-600 font-bold">Şarkımız 🎶</span>
+                    <i class="fas fa-play text-pink-400 text-xl group-hover:text-pink-500 ml-2"></i>
+                </a>
+            </section>
+
+            <!-- Footer Text -->
+            <footer class="text-center mt-24 pb-12">
+                <div class="inline-flex flex-col items-center justify-center gap-4 glass-panel px-8 py-6 rounded-full shadow-md">
+                    <i class="fas fa-heart text-pink-400 text-xl animate-pulse"></i>
+                    <p class="elegant-font italic text-xl md:text-2xl text-pink-600 tracking-wide font-medium">
+                        mustafadan en değerli parçası enfale
+                    </p>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('login-form');
+            const passwordInput = document.getElementById('password-input');
+            const errorMessage = document.getElementById('error-message');
+            const loginScreen = document.getElementById('login-screen');
+            const mainContent = document.getElementById('main-content');
+            
+            // Password required to enter
+            const CORRECT_PASSWORD = "061025";
+
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault(); 
+                
+                const enteredPassword = passwordInput.value.trim();
+
+                if (enteredPassword === CORRECT_PASSWORD) {
+                    // Hide error if it was showing
+                    errorMessage.classList.add('hidden');
+                    
+                    // Fade out login screen
+                    loginScreen.classList.add('hide-login');
+                    
+                    // Show main content after fade delay
+                    setTimeout(() => {
+                        loginScreen.style.display = 'none'; 
+                        mainContent.classList.add('show-content');
+                        startHeartAnimation(); // Start the background effect
+                    }, 800); 
+
+                } else {
+                    // Show error and shake input
+                    errorMessage.classList.remove('hidden');
+                    passwordInput.value = '';
+                    passwordInput.focus();
+                    
+                    passwordInput.classList.add('animate-pulse', 'border-red-400');
+                    setTimeout(() => {
+                        passwordInput.classList.remove('animate-pulse', 'border-red-400');
+                    }, 1000);
+                }
+            });
+
+            // Function to generate floating hearts
+            function startHeartAnimation() {
+                const heartsContainer = document.getElementById('hearts-container');
+                const heartSymbols = ['fa-heart', 'fa-heart', 'fa-star'];
+                const colors = ['#ffb3c6', '#ff8fab', '#fb6f92', '#ffe5ec'];
+
+                setInterval(() => {
+                    // Limit max elements to prevent lag
+                    if(document.querySelectorAll('.heart').length > 40) return;
+
+                    const heart = document.createElement('i');
+                    const randomSymbol = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+                    
+                    heart.classList.add('fas', randomSymbol, 'heart');
+                    
+                    // Randomize position, duration, size, and color
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    const fallDuration = Math.random() * 12 + 15; 
+                    heart.style.animationDuration = fallDuration + 's';
+                    heart.style.fontSize = (Math.random() * 15 + 12) + 'px';
+                    heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+                    
+                    heartsContainer.appendChild(heart);
+                    
+                    // Remove element after animation completes
+                    setTimeout(() => {
+                        heart.remove();
+                    }, fallDuration * 1000);
+                    
+                }, 600); 
+            }
+        });
+    </script>
+</body>
+</html>
